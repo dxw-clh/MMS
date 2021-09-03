@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:context="http://www.springframework.org/schema/context" 
+ xmlns:p="http://www.springframework.org/schema/p"
+ xmlns:aop="http://www.springframework.org/schema/aop" 
+ xmlns:tx="http://www.springframework.org/schema/tx"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+ http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+ http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
+http://www.springframework.org/schema/tx 
+http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+	<!-- 配置spring注解的扫描 -->
+	<context:component-scan base-package="com.hut.dxw"/>
+	
+	<!--描必须和自己创建的包名一致 -->
+
+	<!-- 配置数据源 -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<!-- 配置数据库驱动 -->
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+		<!-- url地址 -->
+		<property name="url" value="jdbc:mysql://localhost:3306/hujiguanli"/>
+		<!-- 用户名 -->
+		<property name="username" value="root"/>
+		<!-- 密码 -->
+		<property name="password" value="x5"/>
+	</bean>
+
+<!-- spring创建mybatis工厂的 -->
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 配置数据源 -->
+		<property name="dataSource" ref="dataSource"/>
+		<!-- 配置别名 -->
+		<property name="typeAliasesPackage" value="com.hut.dxw.pojo"/>
+		<property name="plugins">
+			<array>
+				<bean class="com.github.pagehelper.PageInterceptor">
+					<property name="properties">
+						<value>
+							helperDialect=Mysql
+						</value>
+					</property>
+				</bean>
+			</array>
+		</property>
+	</bean>
+	<!-- 映射文件的扫描 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 扫描mapper基础包位置 -->
+		<property name="basePackage" value="com.hut.dxw.mapper"/>
+	</bean>
+</beans>
